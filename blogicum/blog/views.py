@@ -14,7 +14,8 @@ def index(request: HttpRequest) -> HttpResponse:
 
 def post_detail(request: HttpRequest, post_id: int) -> HttpResponse:
     post = get_object_or_404(Post.objects.all(), id=post_id, )
-    return render(request, 'blog/detail.html', {'post': post})
+    return render(request, 'blog/detail.html',
+                  {'post': post})
 
 
 def category_posts(request, category_slug):
