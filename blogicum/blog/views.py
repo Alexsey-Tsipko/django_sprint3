@@ -34,4 +34,3 @@ def category_posts(request, category_slug):
             'name': location_name,
         },
     })
-
