@@ -1,6 +1,7 @@
 import pytest
 from django.db.models import (
-    BooleanField, CharField, DateTimeField, ForeignKey, TextField)
+    BooleanField, CharField, DateTimeField,
+    ForeignKey, TextField)
 from django.db.utils import IntegrityError
 
 from blog.models import Post
@@ -13,7 +14,8 @@ pytestmark = [
 
 @pytest.mark.parametrize(
     ('field', 'type', 'params'), [
-        ('title', CharField, {'max_length': 256}),
+        ('title', CharField, {
+            'max_length': 256}),
         ('text', TextField, {}),
         ('pub_date', DateTimeField, {
             'auto_now': False,
