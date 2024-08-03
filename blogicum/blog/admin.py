@@ -16,7 +16,8 @@ class PostAdmin(admin.ModelAdmin):
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     search_fields = ('title', )
-    list_display = ('id', 'title', 'description', 'slug', 'is_published', 'created_at',)
+    list_display = ('id', 'title', 'description', 'slug',
+                    'is_published', 'created_at',)
     list_display_links = ('title',)
     list_editable = ('is_published',)
     list_filter = ('created_at', )
