@@ -21,9 +21,9 @@ def category_posts(request, category_slug):
     posts = Post.objects.filter(category__slug=category_slug)
     category = get_object_or_404(Category, slug=category_slug,
                                  is_published=True)
-    location_name = posts.first().location.name if (posts.exists()
-                                                    and posts.first().location)\
-                                                     else "Планета Земля"
+    location_name = posts.first().location.name\
+        if (posts.exists() and posts.first().location) \
+        else "Планета Земля"
     return render(request, 'blog/category.html', {
         'category': {
             'title': category.title,
@@ -34,3 +34,4 @@ def category_posts(request, category_slug):
             'name': location_name,
         },
     })
+
