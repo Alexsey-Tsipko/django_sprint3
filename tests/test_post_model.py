@@ -56,8 +56,10 @@ def test_author_on_delete(posts_with_author):
     )
 
 
-def test_location_on_delete(posts_with_published_locations):
-    location = posts_with_published_locations[0].location
+def test_location_on_delete(
+        posts_with_published_locations):
+    location = (
+        posts_with_published_locations[0].location)
     try:
         location.delete()
     except IntegrityError:
@@ -66,7 +68,8 @@ def test_location_on_delete(posts_with_published_locations):
             'on_delete поля location в модели Post '
             'соответствует заданию.'
         )
-    assert Post.objects.filter(location=location).exists(), (
+    assert Post.objects.filter(
+        location=location).exists(), (
         'Проверьте, что значение атрибута '
         'on_delete поля location в модели Post '
         'соответствует заданию.'
