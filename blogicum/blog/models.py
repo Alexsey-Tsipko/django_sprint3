@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 
@@ -34,10 +33,9 @@ class Category(AbstractBlogModel):
         'Описание')
     slug = models.SlugField(
         'Идентификатор',
-        help_text=
-        'Идентификатор страницы для URL; '
-        'разрешены символы латиницы, цифры, '
-        'дефис и подчёркивание.',
+        help_text='Идентификатор страницы для URL;'
+                  'разрешены символы латиницы, цифры, '
+                  'дефис и подчёркивание.',
         unique=True
     )
 
