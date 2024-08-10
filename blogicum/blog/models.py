@@ -2,12 +2,13 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 
-from .managers import PostManager
+from .env import MAX_FIELD_LENGTH, REPRESENTATION_LENGTH
+from .managers import QuerySet
 
 User = get_user_model()
 
 
-class BaseBlogModel(models.Model):
+class AbstractBlogModel(models.Model):
     is_published = models.BooleanField(
         'Опубликовано',
         default=True,
@@ -21,52 +22,51 @@ class BaseBlogModel(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ('created_at', )
+        ordering = ('created_at',)
 
 
-class Category(BaseBlogModel):
+class Category(AbstractBlogModel):
     title = models.CharField(
         'Заголовок',
-        max_length=settings.MAX_FIELD_LENGTH
+        max_length=MAX_FIELD_LENGTH
     )
     description = models.TextField(
         'Описание')
     slug = models.SlugField(
         'Идентификатор',
-        help_text=(
-            'Идентификатор страницы для URL; '
-            'разрешены символы латиницы, цифры, '
-            'дефис и подчёркивание.'),
+        help_text=
+        'Идентификатор страницы для URL; '
+        'разрешены символы латиницы, цифры, '
+        'дефис и подчёркивание.',
         unique=True
     )
 
-    class Meta(BaseBlogModel.Meta):
+    class Meta(AbstractBlogModel.Meta):
         verbose_name = 'категория'
         verbose_name_plural = 'Категории'
 
     def __str__(self) -> str:
-        return self.title[:settings.REPRESENTATION_LENGTH]
+        return self.title[:REPRESENTATION_LENGTH]
 
 
-class Location(BaseBlogModel):
+class Location(AbstractBlogModel):
     name = models.CharField(
         'Название места',
-        max_length=settings.MAX_FIELD_LENGTH
+        max_length=MAX_FIELD_LENGTH
     )
 
-    class Meta(BaseBlogModel.Meta):
+    class Meta(AbstractBlogModel.Meta):
         verbose_name = 'местоположение'
         verbose_name_plural = 'Местоположения'
 
     def __str__(self) -> str:
-        return self.name[:settings.REPRESENTATION_LENGTH]
+        return self.name[:REPRESENTATION_LENGTH]
 
 
-class Post(BaseBlogModel):
-    objects = None
+class Post(AbstractBlogModel):
     title = models.CharField(
         'Заголовок',
-        max_length=settings.MAX_FIELD_LENGTH
+        max_length=MAX_FIELD_LENGTH
     )
     text = models.TextField('Текст')
     pub_date = models.DateTimeField(
@@ -94,13 +94,13 @@ class Post(BaseBlogModel):
         verbose_name='Местоположение',
     )
 
-    objects = PostManager()
+    objects = QuerySet()
 
-    class Meta(BaseBlogModel.Meta):
+    class Meta(AbstractBlogModel.Meta):
         default_related_name = 'posts'
         verbose_name = 'публикация'
         verbose_name_plural = 'Публикации'
         ordering = ('-pub_date',)
 
     def __str__(self) -> str:
-        return self.title[:settings.REPRESENTATION_LENGTH]
+        return self.title[:REPRESENTATION_LENGTH]
