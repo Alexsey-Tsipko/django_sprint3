@@ -1,8 +1,8 @@
-from django.db.models import Manager
+from django.db.models import QuerySet
 from django.utils.timezone import now
 
 
-class QuerySet(Manager):
+class CustomQuerySet(QuerySet):
     def get_queryset(self):
         return super().get_queryset().filter(
             is_published=True,

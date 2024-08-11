@@ -1,13 +1,13 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
-from .env import MAX_FIELD_LENGTH, REPRESENTATION_LENGTH
-from .managers import QuerySet
+from .text_restrictions import MAX_FIELD_LENGTH, REPRESENTATION_LENGTH
+from .managers import CustomQuerySet
 
 User = get_user_model()
 
 
-class AbstractBlogModel(models.Model):
+class BasePostModel(models.Model):
     is_published = models.BooleanField(
         'Опубликовано',
         default=True,
@@ -21,10 +21,10 @@ class AbstractBlogModel(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ('created_at',)
+        ordering = ('-created_at',)
 
 
-class Category(AbstractBlogModel):
+class Category(BasePostModel):
     title = models.CharField(
         'Заголовок',
         max_length=MAX_FIELD_LENGTH
@@ -33,13 +33,14 @@ class Category(AbstractBlogModel):
         'Описание')
     slug = models.SlugField(
         'Идентификатор',
-        help_text='Идентификатор страницы для URL;'
-                  ' разрешены символы латиницы, '
-                  'цифры, дефис и подчёркивание.',
+        help_text=(
+            'Идентификатор страницы для URL;'
+            'разрешены символы латиницы, цифры, '
+            'дефис и подчёркивание.'),
         unique=True
     )
 
-    class Meta(AbstractBlogModel.Meta):
+    class Meta(BasePostModel.Meta):
         verbose_name = 'категория'
         verbose_name_plural = 'Категории'
 
@@ -47,13 +48,13 @@ class Category(AbstractBlogModel):
         return self.title[:REPRESENTATION_LENGTH]
 
 
-class Location(AbstractBlogModel):
+class Location(BasePostModel):
     name = models.CharField(
         'Название места',
         max_length=MAX_FIELD_LENGTH
     )
 
-    class Meta(AbstractBlogModel.Meta):
+    class Meta(BasePostModel.Meta):
         verbose_name = 'местоположение'
         verbose_name_plural = 'Местоположения'
 
@@ -61,7 +62,7 @@ class Location(AbstractBlogModel):
         return self.name[:REPRESENTATION_LENGTH]
 
 
-class Post(AbstractBlogModel):
+class Post(BasePostModel):
     title = models.CharField(
         'Заголовок',
         max_length=MAX_FIELD_LENGTH
@@ -91,10 +92,15 @@ class Post(AbstractBlogModel):
         on_delete=models.SET_NULL,
         verbose_name='Местоположение',
     )
+    is_published = models.BooleanField(
+        'Опубликовано',
+        default=True,
+        help_text='Снимите галочку, чтобы скрыть публикацию.'
+    )
 
-    objects = QuerySet()
+    objects = CustomQuerySet()
 
-    class Meta(AbstractBlogModel.Meta):
+    class Meta(BasePostModel.Meta):
         default_related_name = 'posts'
         verbose_name = 'публикация'
         verbose_name_plural = 'Публикации'
