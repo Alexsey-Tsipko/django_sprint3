@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
+
 from .text_restrictions import MAX_FIELD_LENGTH, REPRESENTATION_LENGTH
 from .managers import CustomQuerySet
 
@@ -92,13 +93,7 @@ class Post(BasePostModel):
         on_delete=models.SET_NULL,
         verbose_name='Местоположение',
     )
-    is_published = models.BooleanField(
-        'Опубликовано',
-        default=True,
-        help_text='Снимите галочку, чтобы скрыть публикацию.'
-    )
-
-    objects = CustomQuerySet()
+    objects = CustomQuerySet.as_manager()
 
     class Meta(BasePostModel.Meta):
         default_related_name = 'posts'
