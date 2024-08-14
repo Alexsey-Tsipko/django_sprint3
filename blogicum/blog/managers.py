@@ -1,10 +1,10 @@
-from django.db.models import QuerySet
+from django.db.models import Manager, QuerySet
 from django.utils.timezone import now
 
 
 class CustomQuerySet(QuerySet):
-    def get_queryset(self):
-        return super().get_queryset().filter(
+    def filtered_posts(self):
+        return self.filter(
             is_published=True,
             pub_date__lte=now(),
             category__is_published=True
@@ -13,3 +13,11 @@ class CustomQuerySet(QuerySet):
             'category',
             'location',
         )
+
+
+class FilteredManager(Manager):
+    def get_queryset(self):
+        return CustomQuerySet(self.model, using=self._db)
+
+    def filtered_posts(self):
+        return self.get_queryset().filtered_posts()

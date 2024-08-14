@@ -3,7 +3,7 @@ from django.db import models
 
 
 from .text_restrictions import MAX_FIELD_LENGTH, REPRESENTATION_LENGTH
-from .managers import CustomQuerySet
+from .managers import FilteredManager
 
 User = get_user_model()
 
@@ -35,7 +35,7 @@ class Category(BasePostModel):
     slug = models.SlugField(
         'Идентификатор',
         help_text=(
-            'Идентификатор страницы для URL;'
+            'Идентификатор страницы для URL; '
             'разрешены символы латиницы, цифры, '
             'дефис и подчёркивание.'),
         unique=True
@@ -93,7 +93,7 @@ class Post(BasePostModel):
         on_delete=models.SET_NULL,
         verbose_name='Местоположение',
     )
-    objects = CustomQuerySet.as_manager()
+    objects = FilteredManager()
 
     class Meta(BasePostModel.Meta):
         default_related_name = 'posts'
