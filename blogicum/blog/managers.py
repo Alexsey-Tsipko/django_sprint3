@@ -1,4 +1,4 @@
-from django.db.models import Manager, QuerySet
+from django.db.models import QuerySet
 from django.utils.timezone import now
 
 
