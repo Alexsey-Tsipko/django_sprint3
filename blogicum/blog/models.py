@@ -1,14 +1,14 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
+from .managers import CustomQuerySet
+from .constants import MAX_FIELD_LENGTH, REPRESENTATION_LENGTH
 
-from .text_restrictions import MAX_FIELD_LENGTH, REPRESENTATION_LENGTH
-from .managers import FilteredManager
 
 User = get_user_model()
 
 
-class BasePostModel(models.Model):
+class BasePublicationModel(models.Model):
     is_published = models.BooleanField(
         'Опубликовано',
         default=True,
@@ -25,7 +25,7 @@ class BasePostModel(models.Model):
         ordering = ('-created_at',)
 
 
-class Category(BasePostModel):
+class Category(BasePublicationModel):
     title = models.CharField(
         'Заголовок',
         max_length=MAX_FIELD_LENGTH
@@ -41,7 +41,7 @@ class Category(BasePostModel):
         unique=True
     )
 
-    class Meta(BasePostModel.Meta):
+    class Meta(BasePublicationModel.Meta):
         verbose_name = 'категория'
         verbose_name_plural = 'Категории'
 
@@ -49,13 +49,13 @@ class Category(BasePostModel):
         return self.title[:REPRESENTATION_LENGTH]
 
 
-class Location(BasePostModel):
+class Location(BasePublicationModel):
     name = models.CharField(
         'Название места',
         max_length=MAX_FIELD_LENGTH
     )
 
-    class Meta(BasePostModel.Meta):
+    class Meta(BasePublicationModel.Meta):
         verbose_name = 'местоположение'
         verbose_name_plural = 'Местоположения'
 
@@ -63,7 +63,7 @@ class Location(BasePostModel):
         return self.name[:REPRESENTATION_LENGTH]
 
 
-class Post(BasePostModel):
+class Post(BasePublicationModel):
     title = models.CharField(
         'Заголовок',
         max_length=MAX_FIELD_LENGTH
@@ -93,9 +93,9 @@ class Post(BasePostModel):
         on_delete=models.SET_NULL,
         verbose_name='Местоположение',
     )
-    objects = FilteredManager()
+    objects = CustomQuerySet.as_manager()
 
-    class Meta(BasePostModel.Meta):
+    class Meta(BasePublicationModel.Meta):
         default_related_name = 'posts'
         verbose_name = 'публикация'
         verbose_name_plural = 'Публикации'

@@ -13,11 +13,3 @@ class CustomQuerySet(QuerySet):
             'category',
             'location',
         )
-
-
-class FilteredManager(Manager):
-    def get_queryset(self):
-        return CustomQuerySet(self.model, using=self._db)
-
-    def filtered_posts(self):
-        return self.get_queryset().filtered_posts()
